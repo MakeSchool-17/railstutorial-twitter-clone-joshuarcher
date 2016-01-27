@@ -1,4 +1,4 @@
 # railstutorial-twitter-clone-joshuarcher
 
 ## Branches
-  * hello_app
+  * hello_app -> master
