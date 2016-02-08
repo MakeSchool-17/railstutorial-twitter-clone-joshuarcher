@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
   # creates authenticate method that returns user
   # => when password is correct
 
-  validates :password, presence: true, length: { minimum: 6 }
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 
   class << self # class methods
     # returns the hash digest of the given string.
