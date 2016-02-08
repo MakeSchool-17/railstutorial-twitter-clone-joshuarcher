@@ -1,22 +1,22 @@
-
-
 class SessionsController < ApplicationController
   def new
   end
 
+  # changed user variable to instance @user variable
+  # so we can access it in testing suite as assigns(:user)
   def create
-    user = User.find_by(email: params[:session][:email])
-    if user && user.authenticate(params[:session][:password])
+    @user = User.find_by(email: params[:session][:email].downcase)
+    if @user && @user.authenticate(params[:session][:password])
       # log in user
-      log_in user
+      log_in @user
       # if params[:session][:remember_me] == '1'
       #   remember user
       # else
       #   forget user
       # end
       # same as above ^^
-      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      redirect_to user
+      params[:session][:remember_me] == '1' ? remember(@user) : forget(@user)
+      redirect_to @user
     else
       #create an error
       flash.now[:danger] = 'Invalid email/password combination'
