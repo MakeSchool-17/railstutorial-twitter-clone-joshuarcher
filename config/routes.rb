@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  #get 'account_activations/edit'
+
   # STATIC PAGES
   root             'static_pages#home'
   get 'help'    => 'static_pages#help'
@@ -29,6 +31,7 @@ Rails.application.routes.draw do
 
   # => RESOURCES
   resources :users
+  resources :account_activations, only: [:edit]
   # Example resource route with options:
   #   resources :products do
   #     member do

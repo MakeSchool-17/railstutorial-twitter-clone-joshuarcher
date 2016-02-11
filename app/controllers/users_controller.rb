@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  # before filters => authorization
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user,     only: :destroy
@@ -18,9 +19,14 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      log_in @user
-      flash[:success] = "Welcome to the Sample App"
-      redirect_to @user
+      @user.send_activation_email
+      # log_in @user
+      # moved to user model
+      # UserMailer.account_activation(@user).deliver_now
+      flash[:info] = "Please check your email to activate your account"
+      # flash[:success] = "Welcome to the Sample App"
+      # redirect_to @user
+      redirect_to root_url
     else
       # handle error
       render 'new'
@@ -76,7 +82,7 @@ class UsersController < ApplicationController
       redirect_to(root_url) unless current_user?(@user)
     end
 
-    #confirms admin user
+    # confirms admin user
     def admin_user
       redirect_to(root_url) unless current_user.admin?
     end
