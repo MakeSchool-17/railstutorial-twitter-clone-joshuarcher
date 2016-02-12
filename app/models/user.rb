@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessor :remember_token, :activation_token
+  attr_accessor :remember_token, :activation_token, :reset_token
 
   # validates(:name, presence: true)
   # before_save { self.email = email.downcase }
@@ -64,9 +64,26 @@ class User < ActiveRecord::Base
     self.update_attribute(:activated_at,  Time.zone.now)
   end
 
-  # send activation email
+  # send activation emailt
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
+  end
+
+  # sets the password reset method
+  def create_reset_digest
+    self.reset_token = User.new_token
+    self.update_attribute(:reset_digest, User.digest(reset_token))
+    self.update_attribute(:reset_sent_at, Time.zone.now)
+  end
+
+  # send reset emailt
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  #returns true if a password reset has expired
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
   end
 
   private
